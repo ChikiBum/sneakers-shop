@@ -1,36 +1,36 @@
 
-const Drawer = (props) => {
-    return (
-      <div style={{display: 'block'}} className="overlay">
+const Drawer = ({onClose, onRemove, items = []}) => {
+    
+  return (
+      <div  className="overlay">
         <div className="drawer">
               <h2 className="mb-30 d-flex justify-between ">
                 Cart 
-                <img className="removeBtn cu-p"  width={32} height={32} src="img/btn-remove.svg" alt="remove" /> 
+                <img onClick={onClose} className="removeBtn cu-p"  width={32} height={32} src="img/btn-remove.svg" alt="Close" /> 
               </h2>
 
               <div className="items">
-                <div className="cartItem d-flex align-center mb-20">
-                  <div 
-                    style={{backgroundImage: 'url(img/sneakers/1.jpg)'}} 
-                    className="cartItemImg"
-                  ></div>
-                  <div  className="mr-20 flex">
-                    <p className="mb-5">Mens Sneakers Nike Blazer Mid Suede</p>
-                    <b>12 999 EUR</b>
-                  </div>
-                  <img className="removeBtn"  width={32} height={32} src="img/btn-remove.svg" alt="remove" />  
-                </div>
-                <div className="cartItem d-flex align-center mb-20">
-                  <div 
-                    style={{backgroundImage: 'url(img/sneakers/1.jpg)'}} 
-                    className="cartItemImg"
-                  ></div>
-                  <div  className="mr-20 flex">
-                    <p className="mb-5">Mens Sneakers Nike Blazer Mid Suede</p>
-                    <b>12 999 EUR</b>
-                  </div>
-                  <img className="removeBtn"  width={32} height={32} src="img/btn-remove.svg" alt="remove" />  
-                </div>
+                { items.map( item => (
+                    <div className="cartItem d-flex align-center mb-20">
+                      <div 
+                        style={{backgroundImage: `url(${item.imgUrl})`}} 
+                        className="cartItemImg"
+                      ></div>
+                      <div  className="mr-20 flex">
+                        <p className="mb-5">{item.title}</p>
+                        <b>{item.price} EUR</b>
+                      </div>
+                      <img 
+                        onClick={() => onRemove(item.id)}
+                        className="removeBtn"  
+                        width={32} 
+                        height={32} 
+                        src="img/btn-remove.svg" 
+                        alt="remove" 
+                      />  
+                    </div>
+                )
+                )}
               </div>
 
               <div className="cartTotalBlock">
