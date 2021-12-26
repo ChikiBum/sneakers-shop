@@ -2,7 +2,7 @@
 const Drawer = ({onClose, onRemove, items = []}) => {
     
   return (
-      <div  className="overlay">
+      <div  className="overlay" onClick={onClose}>
         <div className="drawer">
               <h2 className="mb-30 d-flex justify-between ">
                 Cart 
@@ -10,10 +10,12 @@ const Drawer = ({onClose, onRemove, items = []}) => {
               </h2>
 
               <div className="items">
-                { items.map( item => (
-                    <div className="cartItem d-flex align-center mb-20">
+                { items.map( (item, index) => (
+                    <div className="cartItem d-flex align-center mb-20"
+                          key={index}
+                    >
                       <div 
-                        style={{backgroundImage: `url(${item.imgUrl})`}} 
+                        style={{backgroundImage: `url(${item.img})`}} 
                         className="cartItemImg"
                       ></div>
                       <div  className="mr-20 flex">
