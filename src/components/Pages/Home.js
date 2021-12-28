@@ -1,15 +1,19 @@
 import Card from "../Card";
+import { useContext } from "react";
+import CardContext from "../../context";
+
 
 const Home = ({
                 searchValue,
-                cartItems,
                 setSearchValue,
                 onChangeInputValue,
-                items,
                 onAddFavorite,
                 onAddToCart,
                 isLoading
             }) => {
+
+              
+  const { items } = useContext(CardContext);
             
   const renderItems = () => {
       const filteredItems = items.filter(i => i.title.toLowerCase()
@@ -18,12 +22,6 @@ const Home = ({
         .map((item, index) => (                        
         <Card 
           key={index}
-          favorite
-          added={cartItems.some(obj => Number(obj.id) === Number(item.id))}
-          // id={item.id} 
-          // imgUrl={item.img} 
-          // title={item.title} 
-          // price={item.price}
           onFavorite={(obj) => onAddFavorite(obj)}
           onPlus={(obj) => onAddToCart(obj)}
           loading={isLoading}
