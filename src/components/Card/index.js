@@ -6,6 +6,7 @@ import styles from './Card.module.scss';
 
 const Card = ({
                 id,
+                id: myId,
                 favorite, 
                 img, 
                 title, 
@@ -18,7 +19,7 @@ const Card = ({
     const { isItemAdded } = useContext(CardContext)
     
     const onClickPlus = () => {
-      onPlus({id, img, title, price});
+      onPlus({id, myId, img, title, price});
     };
 
     const [isFavorite, setIsFavorite] = useState(favorite);
@@ -61,7 +62,7 @@ const Card = ({
                   <span>Price: </span>
                   <b>{price} EUR</b>
                 </div>
-                  <img className={styles.plus} onClick={onClickPlus} src={isItemAdded(id) ?  "img/btn-cheked.svg" : "img/btn-plus.svg"} alt="plus" />
+                  <img className={styles.plus} onClick={onClickPlus} src={isItemAdded(myId) ?  "img/btn-cheked.svg" : "img/btn-plus.svg"} alt="plus" />
               </div>
             </>
           }

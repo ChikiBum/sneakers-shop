@@ -11,6 +11,7 @@ import CardContext from "./context";
 function App() {
   const [items, setItems] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [cartItemsSummury, setCartItemsSummury] = useState('0');
   const [favoriteItems, setFavoriteItems] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [cartOpened, setCartOpened] = useState(false);
@@ -35,17 +36,27 @@ function App() {
     
   }, []);
 
+  const calculateSum = async () => {
+    const { data } = await axios.get('https://61c227bf9dbcca0017c82393.mockapi.io/cart');
+  
+    console.log('cartResponse: ', data)
+    setCartItemsSummury(data
+      .reduce((acc, item) => {
+      return Number(acc) + Number(item.price) 
+    }, 0))
+    console.log('cartItemsSummury: ', cartItemsSummury)
+  }
   const onAddToCart = async (obj) => {
-    // axios.post('https://61c227bf9dbcca0017c82393.mockapi.io/cart', obj);
-    // setCartItems(prev => [...prev, obj]);
-
     try{
-      if (cartItems.find(item => Number(item.id) === Number(obj.id))){
-        axios.delete(`https://61c227bf9dbcca0017c82393.mockapi.io/cart/${obj.id}`);
-        setCartItems(prev => prev.filter(item => Number(item.id) !== Number(obj.id)));
+      if (cartItems.find(item => Number(item.myId) === Number(obj.myId))){
+        const forDeleteId = cartItems.find(item => Number(item.myId) === Number(obj.myId)).id;
+        const { data } = await axios.delete(`https://61c227bf9dbcca0017c82393.mockapi.io/cart/${forDeleteId}`);
+        setCartItems(prev => prev.filter(item => Number(item.myId) !== Number(obj.myId)));
+        calculateSum();
       } else {
         const { data } = await axios.post('https://61c227bf9dbcca0017c82393.mockapi.io/cart', obj);
         setCartItems(prev => [...prev, data]);
+        calculateSum();
       }
     } catch {
       alert('SORRY ERROR!')
@@ -76,15 +87,19 @@ function App() {
   }
 
   const isItemAdded = (id) => {
-    return cartItems.some(obj => Number(obj.id) === Number(id));
+    return cartItems.some(obj => Number(obj.myId) === Number(id));
   }
 
   return (
     <CardContext.Provider value={{items, cartItems, favoriteItems, isItemAdded}}>
       <div className="wrapper clear">
         
-        {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem}/>}
-        <Header onClickCart={() => setCartOpened(true)}/>
+        {cartOpened && <Drawer 
+                        items={cartItems} 
+                        onClose={() => 
+                        setCartOpened(false)} 
+                        onRemove={onRemoveItem}/>}
+        <Header onClickCart={() => setCartOpened(true)} itemsSum={cartItemsSummury}/>
 
         <Routes>
           <Route 
